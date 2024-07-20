@@ -3,14 +3,13 @@ run-name: ${{ github.head_ref }} Challenge | ${{ github.event.pull_request.user.
 on:
     pull_request:
         branches:
-            - master
-        branches-ignore:
-            - dev
+            - 'master'
     workflow_dispatch:
 ######################
 jobs:
   test:
     name: 'Test Challenge Structure'
+    if: github.head_ref != 'dev'
     defaults:
       run:
         shell: bash
