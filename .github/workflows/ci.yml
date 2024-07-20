@@ -1,0 +1,106 @@
+name: Challenges Build Test
+run-name: ${{ github.head_ref }} Challenge | ${{ github.event.pull_request.user.login }}
+on:
+    pull_request:
+        branches:
+            - master
+    workflow_dispatch:
+######################
+jobs:
+  test:
+    name: 'Test Challenge Structure'
+    defaults:
+      run:
+        shell: bash
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Python Setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11.7'
+      
+      - name: Test Challenge directory structure
+        run: .github/scripts/chall_structure_validator.py ${{github.head_ref}}
+
+######################
+
+  test_deployability:
+    name: 'Check Deployability'
+    defaults:
+      run:
+        shell: bash
+    outputs:
+      deploy_env: ${{ steps.deployable.outputs.deploy_env }}
+    runs-on: ubuntu-latest
+    needs: test
+    if: success()
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 'Dockerfile Existance'
+        id: 'deployable'
+        run : .github/scripts/deployability_checker.sh ${{ github.head_ref }}
+
+      - name: 'Check Output'
+        run: echo "${{steps.deployable.outputs.deploy_env}}"
+        
+######################        
+
+  build_dockerfile:
+    name: 'Build Challenge Image using Dockerfile'
+    needs: test_deployability
+    if: needs.test_deployability.outputs.deploy_env == 'Dockerfile'
+    defaults:
+      run:
+        shell: bash
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      
+      - name: Build Challenge Image
+        run: docker buildx build ./${{github.head_ref}}/ --load -t "$(echo ${{github.head_ref}} | tr -t '[A-Z]' '[a-z]')":latest
+
+      - name: Launch Container
+        run: docker run -d "$(echo ${{github.head_ref}} | tr -t '[A-Z]' '[a-z]')":latest
+
+      - name: Check Running Container
+        run: docker ps -a
+
+######################      
+
+  build_docker-compose:
+      name: 'Start Challenge using Docker Compose'
+      needs: test_deployability
+      if: needs.test_deployability.outputs.deploy_env == 'docker-compose'
+      defaults:
+        run:
+          shell: bash
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            ref: ${{ github.head_ref }}
+
+        - name: Docker Compose Challenge Deployment
+          uses: hoverkraft-tech/compose-action@v2.0.1
+          with:
+            compose-file: ${{ github.head_ref }}/docker-compose.yml
+            up-flags: "--build"
+
+        - name: Test Challenge
+          run: docker ps -a
