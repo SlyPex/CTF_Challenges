@@ -1,0 +1,48 @@
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+      when: always
+    - if: $CI_PIPELINE_SOURCE == 'push'
+      when: never
+
+stages:
+  - Test Challenge Structure
+  - Check Deployability
+  - Test Deployment
+
+.standard_rules:
+  rules:
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME != 'dev' 
+
+Job 1:
+  extends: .standard_rules
+  stage: Test Challenge Structure
+  image: python:3.11.4-alpine3.18
+  script:
+    - python .gitlab/scripts/chall_structure_validator.py $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+
+Job 2:
+  extends: .standard_rules
+  stage: Check Deployability
+  needs:
+    - Job 1
+  image: ubuntu:latest
+  script:
+    - bash .gitlab/scripts/deployability_checker.sh $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - ls -lA
+    - cat deploy.env
+  artifacts:
+    reports:
+      dotenv: deploy.env
+
+Job 3:
+  extends: .standard_rules
+  stage: Test Deployment
+  image: docker:latest
+  services:
+    - docker:dind
+  needs:
+    - job: Job 2
+      artifacts: true
+  script: 
+    - sh .gitlab/scripts/test_deploy.sh
