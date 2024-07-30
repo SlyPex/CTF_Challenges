@@ -1,4 +1,5 @@
 workflow:
+  name: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME Challenge | $CI_COMMIT_AUTHOR
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       when: always
@@ -12,9 +13,7 @@ stages:
 
 .standard_rules:
   rules:
-    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == 'dev'
-      when: never
-      allow_failure: true
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME != 'dev'
 
 Job 1:
   extends: .standard_rules
@@ -31,8 +30,6 @@ Job 2:
   image: ubuntu:latest
   script:
     - bash .gitlab/scripts/deployability_checker.sh $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
-    - ls -lA
-    - cat deploy.env
   artifacts:
     reports:
       dotenv: deploy.env
