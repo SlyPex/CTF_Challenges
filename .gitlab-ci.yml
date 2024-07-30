@@ -12,7 +12,9 @@ stages:
 
 .standard_rules:
   rules:
-    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME != 'dev' 
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME != 'dev'
+      when: never
+      allow_failure: true
 
 Job 1:
   extends: .standard_rules
