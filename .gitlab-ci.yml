@@ -1,5 +1,5 @@
 workflow:
-  name: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME Challenge | $CI_COMMIT_AUTHOR
+  name: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME Challenge | $GITLAB_USER_LOGIN
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
       when: always
@@ -13,7 +13,10 @@ stages:
 
 .standard_rules:
   rules:
-    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME != 'dev'
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == 'dev'
+      when: on_success
+      allow_failure: true
+    - when: always
 
 Job 1:
   extends: .standard_rules
