@@ -8,7 +8,7 @@ This repo contains the challenges i contributed while authoring some CTF compete
 
 Not all challenges needs launching , it depends on the nature of the challenge, if it's needs remote access you can deploy the challenge locally using docker following these steps :
 
-- Change directory to a prefered challenge directoryv
+- Change directory to a prefered challenge directory
 
 ```bash
 cd challenge_directory/
