@@ -1,10 +1,13 @@
 name: Challenges Build Test
 run-name: ${{ github.head_ref }} Challenge | ${{ github.event.pull_request.user.login }}
 on:
-    pull_request:
-        branches:
-            - 'main'
-    workflow_dispatch:
+  pull_request:
+      branches:
+          - 'main'
+  workflow_dispatch:
+######################
+env:
+  DIRECTORY: challenges
 ######################
 jobs:
   test:
@@ -26,7 +29,7 @@ jobs:
           python-version: '3.11.7'
       
       - name: Test Challenge directory structure
-        run: .github/scripts/chall_structure_validator.py ${{github.head_ref}}
+        run: .github/scripts/chall_structure_validator.py $DIRECTORY/${{github.head_ref}}
 
 ######################
 
@@ -48,7 +51,7 @@ jobs:
 
       - name: 'Dockerfile Existance'
         id: 'deployable'
-        run : .github/scripts/deployability_checker.sh ${{ github.head_ref }}
+        run : .github/scripts/deployability_checker.sh $DIRECTORY/${{ github.head_ref }}
 
       - name: 'Check Output'
         run: echo "${{steps.deployable.outputs.deploy_env}}"
@@ -73,7 +76,7 @@ jobs:
           ref: ${{ github.head_ref }}
       
       - name: Build Challenge Image
-        run: docker buildx build ./${{github.head_ref}}/ --load -t "$(echo ${{github.head_ref}} | tr -t '[A-Z]' '[a-z]')":latest
+        run: docker buildx build $DIRECTORY/${{github.head_ref}}/ --load -t "$(echo ${{github.head_ref}} | tr -t '[A-Z]' '[a-z]')":latest
 
       - name: Launch Container
         run: docker run -d "$(echo ${{github.head_ref}} | tr -t '[A-Z]' '[a-z]')":latest
@@ -100,7 +103,7 @@ jobs:
         - name: Docker Compose Challenge Deployment
           uses: hoverkraft-tech/compose-action@v2.0.1
           with:
-            compose-file: ${{ github.head_ref }}/docker-compose.yml
+            compose-file: $DIRECTORY/${{ github.head_ref }}/docker-compose.yml
             up-flags: "--build"
 
         - name: Test Challenge

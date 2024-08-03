@@ -11,6 +11,9 @@ stages:
   - Check Deployability
   - Test Deployment
 
+variables:
+  DIRECTORY: challenges
+
 .standard_rules:
   rules:
     - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == 'dev'
@@ -23,7 +26,7 @@ Job 1:
   stage: Test Challenge Structure
   image: python:3.11.4-alpine3.18
   script:
-    - python .gitlab/scripts/chall_structure_validator.py $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - python .gitlab/scripts/chall_structure_validator.py $DIRECTORY/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
 Job 2:
   extends: .standard_rules
@@ -32,7 +35,8 @@ Job 2:
     - Job 1
   image: ubuntu:latest
   script:
-    - bash .gitlab/scripts/deployability_checker.sh $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - bash .gitlab/scripts/deployability_checker.sh $DIRECTORY/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+    - cat deploy.env
   artifacts:
     reports:
       dotenv: deploy.env
