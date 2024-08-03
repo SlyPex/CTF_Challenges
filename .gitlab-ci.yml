@@ -51,4 +51,4 @@ Job 3:
     - job: Job 2
       artifacts: true
   script: 
-    - sh .gitlab/scripts/test_deploy.sh
+    - sh .gitlab/scripts/test_deploy.sh $DIRECTORY/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
