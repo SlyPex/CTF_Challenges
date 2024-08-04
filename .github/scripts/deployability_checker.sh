@@ -15,15 +15,15 @@ else
 	then
 		echo "[!] - ERROR : The specified Argument $1 is not a directory" >&2
 		exit 1
-	elif (ls -lA $1 | grep -qo docker-compose.yml)
+	elif (ls -lA "$1" | grep -qo docker-compose.yml)
 	then
 		echo "[*] Deployable with docker-compose"
-		echo "deploy_env=docker-compose" >> $GITHUB_OUTPUT
+		echo "deploy_env=docker-compose" >> "$GITHUB_OUTPUT"
 		exit 0
-	elif (ls -lA $1 | grep -qo Dockerfile)
+	elif (ls -lA "$1" | grep -qo Dockerfile)
 	then
 		echo "[*] Deployable with Dockerfile"
-		echo "deploy_env=Dockerfile" >> $GITHUB_OUTPUT
+		echo "deploy_env=Dockerfile" >> "$GITHUB_OUTPUT"
 		exit 0
 	else
 		echo "[*] This Challenge is not deployable"
