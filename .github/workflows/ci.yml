@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 ######################
 env:
-  - DIRECTORY: challenges
-  - README_FILE: README.md
+  DIRECTORY: challenges
+  README_FILE: README.md
 ######################
 jobs:
   test:
