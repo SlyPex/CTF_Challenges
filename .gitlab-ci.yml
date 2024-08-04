@@ -7,12 +7,13 @@ workflow:
       when: never
 
 stages:
-  - Test Challenge Structure
+  - Test Challenge Files
   - Check Deployability
   - Test Deployment
 
 variables:
   DIRECTORY: challenges
+  README_FILE: README.md
 
 .standard_rules:
   rules:
@@ -23,12 +24,12 @@ variables:
 
 Job 1:
   extends: .standard_rules
-  stage: Test Challenge Structure
+  stage: Test Challenge Files
   image: python:3.11.4-alpine3.18
   script:
     - python .gitlab/scripts/chall_structure_validator.py $DIRECTORY/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
-Job 2:
+Job 3:
   extends: .standard_rules
   stage: Check Deployability
   needs:
@@ -41,7 +42,7 @@ Job 2:
     reports:
       dotenv: deploy.env
 
-Job 3:
+Job 4:
   extends: .standard_rules
   stage: Test Deployment
   image: docker:latest
@@ -52,3 +53,10 @@ Job 3:
       artifacts: true
   script: 
     - sh .gitlab/scripts/test_deploy.sh $DIRECTORY/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+
+Job 2:
+  extends: .standard_rules
+  stage: Test Challenge Files
+  image: alpine:3.18
+  script:
+    - sh .gitlab/scripts/readme_file_checker.sh $DIRECTORY $README_FILE

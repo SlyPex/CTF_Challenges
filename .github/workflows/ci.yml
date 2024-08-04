@@ -7,7 +7,8 @@ on:
   workflow_dispatch:
 ######################
 env:
-  DIRECTORY: challenges
+  - DIRECTORY: challenges
+  - README_FILE: README.md
 ######################
 jobs:
   test:
@@ -108,3 +109,19 @@ jobs:
 
         - name: Test Challenge
           run: docker ps -a
+
+######################
+  check_readme_file_table:
+    name: 'Check Table with Number of Challs'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: 'Comparaison Number of Challs between Table and within Directory'
+        run: .github/scripts/readme_file_checker.sh $DIRECTORY $README_FILE
