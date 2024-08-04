@@ -113,6 +113,7 @@ jobs:
 ######################
   check_readme_file_table:
     name: 'Check Table with Number of Challs'
+    if: github.head_ref != 'dev'
     runs-on: ubuntu-latest
     defaults:
       run:
