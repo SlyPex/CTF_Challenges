@@ -15,7 +15,7 @@ else
     COUNTER=0
 
     mapfile -t CHALLS_UNDER_DIR < <(echo $(ls "$1" | sort))
-    mapfile -t CHALLS_IN_TABLE < <(echo $(grep -P "^\|" "$2" | tail -n $(($LINES_IN_TABLE - 2)) | cut -d '|' -f 2 | sort ))
+    mapfile -t CHALLS_IN_TABLE < <(echo $(grep -P "^\|" "$2" | tail -n $(($LINES_IN_TABLE - 2)) | cut -d '|' -f 2 | grep -Po "(?<=\[).+(?=\])" | sort ))
 
 
     for dir_chall in "${CHALLS_UNDER_DIR[@]}"
