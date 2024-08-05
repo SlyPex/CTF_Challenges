@@ -1,0 +1,15 @@
+services:
+  b4nner_2:
+    container_name: misc_b4nner_2
+    build: .
+    image: b4nner_2_chall:latest
+    ports:
+      - '3000:22'
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 50M

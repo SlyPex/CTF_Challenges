@@ -1,0 +1,26 @@
+author: SlyPex
+author_link: https://github.com/SlyPex
+category: misc
+deployment:
+  conn_type: ssh
+  containerPort: 22
+  isolate: true
+  name: b4nner-2
+  type: tcp
+description: "> I made another cool banner and i added some security measures.  \n\
+  \n **Password:** ctf  \n **Author**: SlyPex\n"
+difficulty: easy
+docker_image: gcr.io/mentoring-program-371116/b4nner-2:b4nner-2
+flags:
+- shellmates{vIm_3$c4pE_&_pyth0N_lIb_hIj4cKING_cOMbO}
+name: B4nner_2
+state: visible
+tags:
+- Linux
+- Jail
+- Python
+- RTFM
+type: docker
+value: 500
+version: '0.1'
+wave: 1
