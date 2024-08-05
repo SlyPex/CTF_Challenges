@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 SUCCESS="true"
 
 if [[ "$#" -gt 2 ]]
@@ -17,7 +15,7 @@ else
 
     for dir_chall in ${CHALLS_UNDER_DIR[@]}
     do
-        CHALL_LINE=$(grep -P "(?<=(\||\[))${dir_chall}(?=(\||\]))" $2)
+        CHALL_LINE=$(grep -P "(?<=(\||\[))$dir_chall(?=(\||\]))" $2 | cut -d '|' -f 2)
         if [[ -n $CHALL_LINE ]]
         then
             echo "[*] - SUCCESS : $dir_chall is Found in $2 file"
@@ -45,5 +43,6 @@ else
     elif [[ $SUCCESS = "False" ]]
     then
         echo "[!] - ERROR : Checking Failed, Missing Challegnes in $2 File"
+        exit 1
     fi
 fi
