@@ -30,7 +30,7 @@ docker compose down
 
 |Challenge Name|Category|Difficulty|Deployment Required|
 |-|-:|-:|-:|
-|B4nner|Linux|Easy|True
+|[B4nner](challenges/B4nner)|Linux|Easy|True
 
 > This table will be updated everytime i add a challenge to the repo
 
