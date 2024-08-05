@@ -5,11 +5,8 @@ workflow:
       when: always
     - if: $CI_PIPELINE_SOURCE == 'push'
       when: never
-
-stages:
-  - Test Challenge Files
-  - Check Deployability
-  - Test Deployment
+default:
+  image: ubuntu:22.04
 
 variables:
   DIRECTORY: challenges
@@ -22,19 +19,16 @@ variables:
       allow_failure: true
     - when: always
 
-Job 1:
+Test Challenge Structure:
   extends: .standard_rules
-  stage: Test Challenge Files
   image: python:3.11.4-alpine3.18
   script:
     - python .gitlab/scripts/chall_structure_validator.py $DIRECTORY/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
-Job 3:
+Check Deployability:
   extends: .standard_rules
-  stage: Check Deployability
   needs:
-    - Job 1
-  image: ubuntu:latest
+    - Test Challenge Structure
   script:
     - bash .gitlab/scripts/deployability_checker.sh $DIRECTORY/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
     - cat deploy.env
@@ -42,21 +36,18 @@ Job 3:
     reports:
       dotenv: deploy.env
 
-Job 4:
+Test Challenge Build/Deploy:
   extends: .standard_rules
-  stage: Test Deployment
   image: docker:latest
   services:
     - docker:dind
   needs:
-    - job: Job 3
+    - job: Check Deployability
       artifacts: true
   script: 
     - sh .gitlab/scripts/test_deploy.sh $DIRECTORY/$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
-Job 2:
+Check Challs in Readme File:
   extends: .standard_rules
-  stage: Test Challenge Files
-  image: alpine:3.18
   script:
-    - sh .gitlab/scripts/readme_file_checker.sh $DIRECTORY $README_FILE
+    - bash .gitlab/scripts/readme_file_checker.sh $DIRECTORY $README_FILE
