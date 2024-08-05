@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+SUCCESS="true"
+
 if [[ "$#" -gt 2 ]]
 then
     echo -e "[!] - ERROR : Extra Argument Specified\nUsage : $0 [path_to_challs_directory] [path_to_readme_file]" >&2
@@ -11,29 +13,37 @@ then
     echo -e "[!] - ERROR : Missing Argument\nUsage : $0 [path_to_challs_directory] [path_to_readme_file]" >&2
 	exit 1
 else
-    LINES_IN_TABLE=$(grep -Pc "^\|" "$2")
-    COUNTER=0
-
     mapfile -t CHALLS_UNDER_DIR < <(echo $(ls "$1" | sort))
-    mapfile -t CHALLS_IN_TABLE < <(echo $(grep -P "^\|" "$2" | tail -n $(($LINES_IN_TABLE - 2)) | cut -d '|' -f 2 |  grep -Po "(?<=\[).+(?=\])" | sort ))
 
-    for dir_chall in "${CHALLS_UNDER_DIR[@]}"
+    for dir_chall in ${CHALLS_UNDER_DIR[@]}
     do
-        for tab_chall in "${CHALLS_IN_TABLE[@]}"
-        do
-            if [[ "$dir_chall" = "$tab_chall" ]]
+        CHALL_LINE=$(grep -P "(?<=(\||\[))${dir_chall}(?=(\||\]))" $2)
+        if [[ -n $CHALL_LINE ]]
+        then
+            echo "[*] - SUCCESS : $dir_chall is Found in $2 file"
+            if [[ "$CHALL_LINE" = "[$dir_chall]($1/$dir_chall)" ]]
             then
-                COUNTER=$(( $COUNTER + 1 ))
+                echo "[*] - SUCCESS : $dir_chall Challenge is Linked to its directory"
+            else
+                echo "[?] - WARNING : No link found for $dir_chall Challenge"
+                SUCCESS="Warning"
             fi
-        done
+        else
+            echo "[!] - ERROR : $dir_chall Not Found in $2 file" >&2
+            SUCCESS="False"
+        fi
     done
 
-    if [[ $COUNTER -eq $(($(ls -l "$1" | wc -l ) - 1)) ]]
+    if [[ $SUCCESS = "True" ]]
     then
-        echo "[*] - SUCCESS : Challs in README.md and Directory are the same"
+        echo "[*] - SUCCESS : Checking Completed Successfully"
         exit 0
-    else
-        echo "[!] - ERROR : Checking Failed" >&2
-        exit 1
+    elif [[ $SUCCESS = "Warning" ]]
+    then
+        echo "[?] - WARNING : Fix Missing Links in $2 File"
+        exit 0
+    elif [[ $SUCCESS = "False" ]]
+    then
+        echo "[!] - ERROR : Checking Failed, Missing Challegnes in $2 File"
     fi
 fi
