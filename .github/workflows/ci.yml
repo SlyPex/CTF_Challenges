@@ -101,6 +101,9 @@ jobs:
           with:
             ref: ${{ github.head_ref }}
 
+        - name: 'List Files'
+          run: ls -lA .
+
         - name: Docker Compose Challenge Deployment
           uses: hoverkraft-tech/compose-action@v2.0.1
           with:
