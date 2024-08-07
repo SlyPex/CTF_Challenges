@@ -101,13 +101,10 @@ jobs:
           with:
             ref: ${{ github.head_ref }}
 
-        - name: 'List Files'
-          run: ls -lA .
-
         - name: Docker Compose Challenge Deployment
           uses: hoverkraft-tech/compose-action@v2.0.1
           with:
-            compose-file: $DIRECTORY/${{ github.head_ref }}/docker-compose.yml
+            compose-file: ${{ env.DIRECTORY }}/${{ github.head_ref }}/docker-compose.yml
             up-flags: "--build"
 
         - name: Test Challenge
