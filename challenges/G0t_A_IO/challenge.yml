@@ -1,0 +1,27 @@
+name: "G0t_A_I/O"
+author: "SlyPex"
+author_link: "https://github.com/SlyPex"
+
+category: misc
+
+difficulty: ezmed 
+
+description: |
+  > Just some old memories between **Me** and @tawat  
+
+  **Author** : SlyPex
+flags: 
+  - shellmates{y0U_7rUely_g0T_$0M3_0S1NT_$k1ll$}
+
+tags:
+  - OSINT
+  - Easy
+
+value: 500
+type: dynamic
+extra:
+    initial: 500
+    decay: 15
+    minimum: 50
+state: hidden
+version: "0.1"

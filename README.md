@@ -32,6 +32,7 @@ docker compose down
 |-|-:|-:|-:|
 |[B4nner](challenges/B4nner)|Linux|Easy|True
 |[B4nner_2](challenges/B4nner_2)|Linux|Medium|True
+|[G0t_A_IO](challenges/G0t_A_IO)|OSINT|Easy|False
 
 > This table will be updated everytime i add a challenge to the repo
 
