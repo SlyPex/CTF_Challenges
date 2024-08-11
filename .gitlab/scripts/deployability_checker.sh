@@ -29,7 +29,7 @@ else
 		exit 0
 	else
 		echo "[*] This Challenge is not deployable"
-		echo "DEPLOY_ENV=None"
+		echo "DEPLOY_ENV=None" >> "$OUTPUT_FILE"
 		exit 0
 	fi
 fi
