@@ -1,0 +1,29 @@
+name: "signal_party"
+author: "SlyPex"
+author_link: "https://github.com/SlyPex"
+
+category: reverse
+
+difficulty: easy
+
+description: |
+  > Me and my friends decided to host a party.
+    It was full of signals.
+    **Note** : Regex : AlphaCTF{[^SI023468]+}.
+    Wrap the decoded string with AlphaCTF{}.
+
+  **Author** : SlyPex
+flags:
+  - AlphaCTF{YOU_R_REALLY_A_519NAL_PLAY9ROUND_MA57ER}
+
+tags:
+  - Reverse
+  - Easy
+
+value: 500
+extra:
+  initial: 500
+  decay: 35
+  minimum: 50
+state: hidden
+version: "0.1"
