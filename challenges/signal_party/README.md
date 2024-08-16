@@ -13,7 +13,6 @@
 
 **Note** : Regex : `AlphaCTF{[^SI023468]+}`.
 
-Wrap the decoded string with AlphaCTF{}.
 
 ## Solution
 
