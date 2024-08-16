@@ -1,0 +1,32 @@
+name: "prison_realm"
+author: "SlyPex"
+author_link: "https://github.com/SlyPex"
+
+category: misc
+
+difficulty: easy
+
+description: |
+  > Find a way out.
+
+  **Connect With** : nc
+
+  **Author** : SlyPex
+
+flags:
+  - AlphaCTF{3a$y_Pe4SY_l3m0N_SQUe3ZY_CHRO07_E$C4p3}
+
+tags:
+  - Linux
+  - Jail
+  - Easy
+
+value: 500
+type: dynamic
+extra:
+  initial: 500
+  decay: 35
+  minimum: 50
+state: hidden
+version: "0.1"
+

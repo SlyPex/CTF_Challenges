@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  prison_realm:
+    build: .
+    image: prison_realm
+    container_name: prison_realm_chall
+    ports:
+      - 12345:1337
+    hostname: kingdom
+    read_only: true
+    volumes:
+        - prison_realm_volume:/home/alpha/prison_realm/tmp/
+    networks:
+        - prison_realm_network
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+volumes:
+  prison_realm_volume:
+    name: prison_realm_volume
+    driver: local
+
+networks:
+  prison_realm_network:
+    name: prison_realm_network
+    driver: bridge
